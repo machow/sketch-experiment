@@ -21,10 +21,11 @@
     "phantomjs": "^1.9.18"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "karma start",
     "build": "browserify index.js --standalone sketchy -t babelify --outfile example/sketchy.js",
     "min": "browserify index.js -d -t babelify -p [minifyify --no-map] > example/sketchy.min.js",
-    "watch": "watchify -d --debug -t babelify index.js -o example/sketchy.js"
+    "watch": "watchify -d --debug -t babelify index.js -o example/sketchy.js",
+    "deploy": "gh-pages -d example"
   },
   "author": "Michael Chow",
   "license": "ISC",
