@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="node_modules/tether-shepherd/dist/css/shepherd-theme-arrows.css">
+  <title></title>
+</head>
+<body>
+  <canvas id="myCanvas" style="width: 300px; height: 300px;"></canvas>
+  
+  <script src="dst/sketchy.js"></script>
+  <script>
+    var data = [
+        {type: 'drawLine', start: [50, 50], end: [250, 50], order: 0},
+        {type: 'drawLine', start: [250, 50], end: [250, 250], order: 1},
+        {type: 'drawLine', start: [250, 250], end: [50, 250], order: 2},
+        {type: 'drawLine', start: [50, 250], end: [50, 50], order: 3}
+    ];
+
+    createTour = function(){
+      return new shepherd.Tour({
+        defaults: {
+          classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
+        }
+      })
+    }
+
+    tours = {intro: createTour(), prac: createTour(), debrief: createTour()}
+                       
+    var c = document.getElementById('myCanvas')
+    var scope = paper.setup(c);
+    log = []
+    dt = DrawingTrial(scope, log, data);
+    
+
+
+    $.when(
+        instructs('intro', 'example/instructs/intro.html', tours.intro),
+        instructs('prac',  'example/instructs/practice.html', tours.prac)
+    ).done(function(){
+      tours.intro.start()
+    });
+
+
+
+    //instructSteps.intro.forEach((el) => t.addStep(el))
+  </script>
+</body>
+</html>

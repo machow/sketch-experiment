@@ -1,0 +1,34 @@
+{
+  "name": "sketchy",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "^2.1.4",
+    "paper": "^0.9.24",
+    "ramda": "^0.18.0",
+    "tether": "^1.1.1",
+    "tether-shepherd": "^1.2.0"
+  },
+  "devDependencies": {
+    "babelify": "^6.3.0",
+    "browserify-shim": "^3.8.11",
+    "karma": "^0.13.14",
+    "karma-browserify": "^4.4.0",
+    "karma-chrome-launcher": "^0.2.1",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "phantomjs": "^1.9.18"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify index.js --standalone sketchy -t babelify --outfile example/sketchy.js",
+    "min": "browserify index.js -d -t babelify -p [minifyify --no-map] > example/sketchy.min.js",
+    "watch": "watchify -d --debug -t babelify index.js -o example/sketchy.js"
+  },
+  "author": "Michael Chow",
+  "license": "ISC",
+  "browserify-shim": {
+    "paper": "global:paper"
+  }
+}
