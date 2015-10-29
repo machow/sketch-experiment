@@ -35,8 +35,8 @@
 
 
     $.when(
-        instructs('intro', 'example/instructs/intro.html', tours.intro),
-        instructs('prac',  'example/instructs/practice.html', tours.prac)
+        instructs('intro', 'instructs/intro.html', tours.intro),
+        instructs('prac',  'instructs/practice.html', tours.prac)
     ).done(function(){
       tours.intro.start()
     });
