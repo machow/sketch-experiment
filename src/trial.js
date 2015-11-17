@@ -1,27 +1,35 @@
 // Doers ----------------------------------
-
 var Lines = exports.Lines = function(paper){
     return {
-        paths: [],
+        userPaths: [],
+        compPaths: [],
         crnt_path: null,
         numDrawn: 0,
         numStrokes: 0,
         drawLine: function({start, end}) {
             this.numDrawn += 1;
-            return new paper.Path([start, end])
+            var p = new paper.Path([start, end]);
+            this.compPaths.push(p);
+            return p
         },
         addPoint: function({x, y}) { 
             return this.crnt_path.add([x,y]) 
         },
         newPath: function({x, y}) {
             this.crnt_path = new paper.Path([x,y]);
-            this.paths.push(this.crnt_path);
+            this.userPaths.push(this.crnt_path);
             this.numStrokes += 1;
             return this.crnt_path;
         },
         clear: function() {
             paper.project.clear();
-            new paper.Layer().activate();
+            return new paper.Layer().activate();
+        },
+        getData: function({tol}){
+            return {
+             user: this.userPaths.map((val) => val.simplify(tol)),
+             comp: this.compPaths.map((val) => val.simplify(tol))
+            }
         }
     }
 }
@@ -49,11 +57,12 @@ var Actions = exports.Actions = function(log, doers){
     return Object.assign(obj, ...doers)
 }
 
-var DrawingTrial = exports.DrawingTrial = function(paper, log, pars) {
+var DrawingTrial = exports.DrawingTrial = function(paper, log, pars, done) {
     var self = {};
     self.log = log;
     self.actions = Actions(log, [Lines(paper)]);
     self.pars = pars.slice(0,pars.length); // shallow copy of pars
+    self.options = {};
 
     paper.project.currentStyle = {strokeColor: "black"}
 
@@ -78,6 +87,10 @@ var DrawingTrial = exports.DrawingTrial = function(paper, log, pars) {
     };
 
     tool.onMouseUp = function(event) {
+        if (self.pars.length === 0) {
+            self.end();
+            done();
+        }
         self.actions.dispatchOrder(self.pars);
     }
 
@@ -87,7 +100,9 @@ var DrawingTrial = exports.DrawingTrial = function(paper, log, pars) {
     }
 
     self.end = function(){
-        return null
+        self.tool.remove();
+        self.notool.remove();
+        dispatch({type: 'clear'});
     }
 
     return self

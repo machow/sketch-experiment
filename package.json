@@ -3,6 +3,18 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  },
   "dependencies": {
     "jquery": "^2.1.4",
     "paper": "^0.9.24",
@@ -11,7 +23,8 @@
     "tether-shepherd": "^1.2.0"
   },
   "devDependencies": {
-    "babelify": "^6.3.0",
+    "babel-preset-es2015": "^6.1.18",
+    "babelify": "^7.2.0",
     "browserify-shim": "^3.8.11",
     "karma": "^0.13.14",
     "karma-browserify": "^4.4.0",
@@ -22,9 +35,9 @@
   },
   "scripts": {
     "test": "karma start",
-    "build": "browserify index.js --standalone sketchy -t babelify --outfile example/sketchy.js",
-    "min": "browserify index.js -d -t babelify -p [minifyify --no-map] > example/sketchy.min.js",
-    "watch": "watchify -d --debug -t babelify index.js -o example/sketchy.js",
+    "build": "browserify . --standalone sketchy --outfile example/sketchy.js",
+    "min": "browserify . -d -p [minifyify --no-map] > example/sketchy.min.js",
+    "watch": "watchify . -o example/sketchy.js",
     "deploy": "gh-pages -d example"
   },
   "author": "Michael Chow",
