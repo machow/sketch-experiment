@@ -33,7 +33,7 @@ function Task(userCanvasId, goalCanvasId, cueText, trialPars){
     var rater = new procrustes()
 
     // Set up trials themselves
-    var self = {}
+    var self = {scope, goalScope}
     self.log = []
     self.actions = Actions(self.log, [Lines(scope, goalScope, rater.procrustes)]);
     var drawing = DrawingTrial(scope, self.actions);

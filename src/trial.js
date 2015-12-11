@@ -222,6 +222,7 @@ function ReplayTrial(paper, actions, pars, resolve){
 
     self = {}
     self.pars = pars.slice(0,pars.length); // shallow copy of pars
+
     self.thread = new Thread(self.pars, {
         playEntry: entry => actions.dispatch(entry),
         callback: () => {
@@ -231,6 +232,7 @@ function ReplayTrial(paper, actions, pars, resolve){
     });
 
     self.start = function(){
+        self.thread.startTime = performance.now() - self.pars[0].time;  // first starts immediately
         paper.view.on('frame', () => self.thread.run(performance.now()))
     };
 

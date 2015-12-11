@@ -11,20 +11,21 @@
       left: 50%;
       transform: translate(-50%, -50%);
       width: 620px;
-      height: 310px;
+      height: 330px;
+      visibility: hidden;
     }
 
     canvas {
       width: 300px; 
       height: 300px; 
       border: 2px solid black;
-      visibility: hidden;
     }
 
   </style>
 </head>
 <body>
   <div class="container">
+    <button id="spacebar">Spacebar</button><br>
     <canvas id="myCanvas" keepalive="true"></canvas>
     <canvas id="goalCanvas" keepalive="true"></canvas>
   </div>
@@ -32,12 +33,12 @@
   <script src="sketchy.js"></script>
   <script>
   $(document).ready(function(){
-    var data = [
-        {type: 'drawLine', start: [50, 50], end: [250, 50], order: 0},
-        {type: 'drawLine', start: [250, 50], end: [250, 250], order: 1},
-        {type: 'drawLine', start: [250, 250], end: [50, 250], order: 2},
-        {type: 'drawLine', start: [50, 250], end: [50, 50], order: 3}
-    ];
+    //var data = [
+    //    {type: 'drawLine', start: [50, 50], end: [250, 50], order: 0},
+    //    {type: 'drawLine', start: [250, 50], end: [250, 250], order: 1},
+    //    {type: 'drawLine', start: [250, 250], end: [50, 250], order: 2},
+    //    {type: 'drawLine', start: [50, 250], end: [50, 50], order: 3}
+    //];
 
     createTour = function(){
       return new shepherd.Tour({
@@ -57,18 +58,25 @@
       task = Task('myCanvas', 'goalCanvas', "press spacebar to start", trialPars)
       
       tours.intro.on('complete', function(){
-        $('canvas').css('visibility', 'visible');
+        $('.container').css('visibility', 'visible');
         task.run(function(){
-          $('canvas').css('visibility', 'hidden');
+          $('.container').css('visibility', 'hidden');
           tours.debrief.start()
         });
       });
 
       tours.debrief.on('complete', function(){
-        $('canvas').css('visibility', 'visible');
+        $('.container').css('visibility', 'visible');
         console.log(task.log);
         task.replay(function(){null}); 
       });
+
+      var btn = document.querySelector('#spacebar');
+      btn.addEventListener('click', () => {
+        console.log('pressed');
+        task.scope.tool.emit('keyup', {key: "space"});
+      });
+
 
     }
 
@@ -80,6 +88,7 @@
     ).done(function(){
       tours.intro.start()
     });
+
 
 
 
