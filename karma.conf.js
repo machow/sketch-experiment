@@ -14,7 +14,7 @@ module.exports = function(karma) {
       'test/**/*Spec.js': [ 'browserify' ]
     },
 
-    browsers: [ 'PhantomJS' ],
+    browsers: [ 'Chrome' ],
 
     logLevel: 'LOG_DEBUG',
 
@@ -24,7 +24,7 @@ module.exports = function(karma) {
     // browserify configuration
     browserify: {
       debug: true,
-      transform: [ 'babelify', 'browserify-shim'],
+      transform: [['babelify', {presets: "es2015"}]],
     }
   });
 };

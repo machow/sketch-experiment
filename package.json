@@ -12,12 +12,19 @@
             "es2015"
           ]
         }
+      ],
+      [
+        "coffeeify"
       ]
     ]
   },
   "dependencies": {
+    "babel-polyfill": "^6.1.19",
+    "co": "^4.6.0",
+    "coffeeify": "^1.2.0",
     "jquery": "^2.1.4",
     "paper": "^0.9.24",
+    "procrustesjs": "machow/procrustesjs",
     "ramda": "^0.18.0",
     "tether": "^1.1.1",
     "tether-shepherd": "^1.2.0"
@@ -37,7 +44,7 @@
     "test": "karma start",
     "build": "browserify . --standalone sketchy --outfile example/sketchy.js",
     "min": "browserify . -d -p [minifyify --no-map] > example/sketchy.min.js",
-    "watch": "watchify . -o example/sketchy.js",
+    "watch": "watchify . --debug -o example/sketchy.js",
     "deploy": "gh-pages -d example"
   },
   "author": "Michael Chow",
