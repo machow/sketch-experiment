@@ -25,7 +25,9 @@
 </head>
 <body>
   <div class="container">
-    <button id="spacebar">Spacebar</button><br>
+    <button id="spacebar">Spacebar</button>
+    <span id="download"></span>
+    <br>
     <canvas id="myCanvas" keepalive="true"></canvas>
     <canvas id="goalCanvas" keepalive="true"></canvas>
   </div>
@@ -68,6 +70,11 @@
       tours.debrief.on('complete', function(){
         $('.container').css('visibility', 'visible');
         console.log(task.log);
+        // show download link
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(task.log));
+        $('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#download');
+
+        // show replay
         task.replay(function(){null}); 
       });
 
@@ -76,7 +83,6 @@
         console.log('pressed');
         task.scope.tool.emit('keyup', {key: "space"});
       });
-
 
     }
 
