@@ -3,6 +3,7 @@ node_js:
   - "5"
   - "5.1"
 sudo: true
+dist: trusty
 # need to install chrome
 before_install:  
  - export CHROME_BIN=/usr/bin/google-chrome
