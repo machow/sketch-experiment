@@ -51076,82 +51076,93 @@ function Lines(paper, goal) {
     };
 }
 
-function IntroTrial(paper, actions, promptText, resolve) {
-    var self = {};
-
-    self.actions = actions; //[Lines(paper)]);
-
-    self.tool = new paper.Tool(); // prompt before trial starts
-    self.tool.onKeyUp = function (event) {
-        if (event.key == "space") {
-            self.end();
-        }
+function IntroTrial(paperScope, actions, promptText, resolve) {
+    var self = {
+        actions: actions,
+        promptText: promptText,
+        tool: new paperScope.Tool(),
+        start: start,
+        end: end
     };
 
-    self.start = function () {
+    initialize();
+    return self;
+
+    function initialize() {
+        self.tool.onKeyUp = function (event) {
+            if (event.key == "space") {
+                self.end();
+            }
+        };
+    }
+
+    function start() {
         self.actions.dispatch({ type: 'clear' });
-        var c = paper.view.center;
-        self.actions.dispatch({ type: 'prompt', x: c.x, y: c.y, content: promptText });
+        var c = paperScope.view.center;
+        self.actions.dispatch({ type: 'prompt', x: c.x, y: c.y, content: self.promptText });
         self.tool.activate();
     };
 
-    self.end = function () {
+    function end() {
         self.tool.remove();
         resolve();
-    };
-
-    return self;
+    }
 }
 
 function DrawingTrial(paper, actions, pars, resolve) {
-    var self = {};
-    self.actions = actions;
-    self.pars = pars.slice(0, pars.length); // shallow copy of pars
-    self.options = {};
+    var self = {
+        actions: actions,
+        pars: pars.slice(0, pars.length), // shallow copy
+        options: {},
+        notool: new paper.Tool(), // used to "disable" tool events
+        tool: new paper.Tool(), // main tool used for drawing
+        start: start,
+        end: end
+    };
 
-    self.notool = new paper.Tool(); // default
+    initializeTool();
+    return self;
 
-    var tool = self.tool = new paper.Tool(); // main tool used for drawing
-    tool.onMouseDown = function (event) {
-        var row = {
-            type: 'newPath',
-            x: event.point.x,
-            y: event.point.y
+    function initializeTool() {
+        var tool = self.tool;
+        tool.onMouseDown = function (event) {
+            var row = {
+                type: 'newPath',
+                x: event.point.x,
+                y: event.point.y
+            };
+            self.actions.dispatch(row);
         };
-        self.actions.dispatch(row);
-    };
 
-    tool.onMouseDrag = function (event) {
-        var row = {
-            type: 'addPoint',
-            x: event.point.x,
-            y: event.point.y
+        tool.onMouseDrag = function (event) {
+            var row = {
+                type: 'addPoint',
+                x: event.point.x,
+                y: event.point.y
+            };
+            self.actions.dispatch(row);
         };
-        self.actions.dispatch(row);
-    };
 
-    tool.onMouseUp = function (event) {
-        if (self.pars.length === 0) {
-            self.end();
-        }
-        self.actions.dispatchOrder(self.pars);
-    };
+        tool.onMouseUp = function (event) {
+            if (self.pars.length === 0) {
+                self.end();
+            }
+            self.actions.dispatchOrder(self.pars);
+        };
+    }
 
-    self.start = function () {
-        console.log('starting trial');
+    function start() {
         self.actions.dispatch({ type: 'clear' });
         paper.project.currentStyle = { strokeColor: "black" };
         self.actions.dispatchOrder(self.pars); // first trial
         self.tool.activate();
     };
 
-    self.end = function () {
+    function end() {
         self.tool.remove();
         self.notool.remove();
         resolve();
-    };
-
-    return self;
+    }
 }
 
 function ScoringTrial(paper, actions, resolve) {
