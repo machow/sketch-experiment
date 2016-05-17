@@ -25,6 +25,13 @@ module.exports = function(karma) {
     browserify: {
       debug: true,
       transform: [['babelify', {presets: "es2015"}]],
+    },
+    // configure travis-ci browser
+    customLaunchers: {  
+        Chrome_travis_ci: {
+            base: 'Chrome',
+            flags: ['--no-sandbox']
+        }
     }
   });
 };
